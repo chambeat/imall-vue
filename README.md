@@ -1,4 +1,4 @@
-# mxg-msm
+# imall 是一个基于 Spring Boot + Vue 实现前后端分离的微商城项目，用于个人学习使用。
 
 ## Project setup
 ```
