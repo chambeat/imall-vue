@@ -1,28 +1,28 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+// import Login from "../views/login/index"
+/* 
+  以下写法默认会到‘../views/login/’目录下查找名为‘index.vue’的文件。
+  等价于 '../views/login/index.vue' 和 '../views/login/index' 。
+*/
+import Login from "../views/login"
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
-    name: "Home",
-    component: Home
+    path: "/login",
+    name: "Login",
+    component: Login
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
+    path: "/",
+    redirect: "/login"
   }
 ];
 
 const router = new VueRouter({
-  mode: "history",
+  mode: "history", // mode: "history" 是否配置的区别在于：url 末尾有无‘#/’(哈希)。
   base: process.env.BASE_URL,
   routes
 });
