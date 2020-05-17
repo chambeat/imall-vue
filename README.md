@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
-# imall 微商城111
->>>>>>> 73e82a82aa909639d09df8fcf5c74d7b601cb63b
+# imall 微商城 （Vue 部分）
 
 ## Project setup
 ```

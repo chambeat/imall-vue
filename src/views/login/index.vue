@@ -1,28 +1,27 @@
 <template>
   <div class="login-container">
-    <!-- <el-form class="login-form" ref="form" :model="form" label-width="40px"> -->
-    <el-form class="login-form" ref="form" :model="form">
+    <!-- 注意：此处 ref="form" 相当于 id="form" -->
+    <el-form class="login-form" ref="form" :model="form" :rules="rules">
       <div class="title-h3">
         <h3>系统登录</h3>
         <br />
       </div>
       <!-- 帐号 -->
-      <!-- <el-form-item label="帐号"> -->
-      <el-form-item>
+      <!-- 注意：prop 定义在 el-form-item 上。 -->
+      <el-form-item prop="username">
         <el-input v-model="form.username" prefix-icon="iconfont icon-user" placeholder="请输入帐号" />
       </el-form-item>
       <!-- 密码 -->
-      <!-- <el-form-item label="密码"> -->
-      <el-form-item>
+      <el-form-item prop="password">
         <el-input
           v-model="form.password"
-          type="password"
           prefix-icon="iconfont icon-pswd"
           placeholder="请输入密码"
+          show-password
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">登录</el-button>
+        <el-button type="primary" @click="submitForm('form')">登录</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -36,6 +35,11 @@ export default {
       form: {
         username: "",
         password: ""
+      },
+      rules: {
+        // 由于可以定义多个规则，因此是'数组'形式的。
+        username: [{ required: true, message: "请输入帐号", trigger: "blur" }],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
       }
     };
   },
@@ -43,8 +47,14 @@ export default {
   components: {},
 
   methods: {
-    onSubmit() {
-      alert("登录");
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          console.log("登录成功");
+        } else {
+          console.log("登录失败");
+        }
+      });
     }
   }
 };
