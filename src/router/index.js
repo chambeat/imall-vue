@@ -6,6 +6,7 @@ import VueRouter from "vue-router";
   等价于 '../views/login/index.vue' 和 '../views/login/index' 。
 */
 import Login from "../views/login"
+import Layout from "@/components/Layout"
 
 Vue.use(VueRouter);
 
@@ -15,9 +16,13 @@ const routes = [
     name: "Login",
     component: Login
   },
+  // {
+  //   path: "/",
+  //   redirect: "/login"
+  // },
   {
-    path: "/",
-    redirect: "/login"
+    path: '/',
+    component: Layout
   }
 ];
 
