@@ -44,7 +44,7 @@ a {
 .el-dropdown {
   /* 移到最右边 */
   float: right;
-  padding-right: 15px;
+  /* padding-right: 15px; */
   color: white;
   cursor: pointer;
 }
