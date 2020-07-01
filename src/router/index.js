@@ -7,6 +7,12 @@ import VueRouter from "vue-router";
 */
 import Login from "../views/login"
 import Layout from "@/components/Layout"
+import Goods from '@/views/goods'
+import Order from '@/views/order'
+import User from '@/views/user'
+import Authority from '@/views/authority'
+import Statistics from '@/views/statistics'
+import Monitor from '@/views/monitor'
 
 Vue.use(VueRouter);
 
@@ -16,13 +22,60 @@ const routes = [
     name: "Login",
     component: Login
   },
-  // {
-  //   path: "/",
-  //   redirect: "/login"
-  // },
   {
     path: '/',
-    component: Layout
+    component: Layout,
+    redirect: '/goods',
+    children: [{
+      path: '/goods',
+      component: Goods,
+      meta: { title: '商品列表' }
+    }]
+  },
+  {
+    path: '/order',
+    component: Layout,
+    children: [{
+      path: '/',
+      component: Order,
+      meta: { title: '订单管理' }
+    }]
+  },
+  {
+    path: '/user',
+    component: Layout,
+    children: [{
+      path: '/',
+      component: User,
+      meta: { title: '用户管理' }
+    }]
+  },
+  {
+    path: '/authority',
+    component: Layout,
+    children: [{
+      path: '/',
+      component: Authority,
+      meta: { title: '权限管理' }
+    }]
+  },
+  {
+    path: '/statistics',
+    component: Layout,
+    children: [{
+      path: '/',
+      component: Statistics,
+      meta: { title: '数据统计' }
+    }]
+  },
+  {
+    path: '/monitor',
+    component: Layout,
+    children: [{
+      path: '/',
+      component: Monitor,
+      meta: { title: '访问监控' }
+    }]
   }
 ];
 

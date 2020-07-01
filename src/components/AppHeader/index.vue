@@ -17,7 +17,7 @@
           修改密码
         </el-dropdown-item>
         <el-dropdown-item>
-          <i class="el-icon-switch-button"></i>
+          <i class="el-icon-switch-button" style="color: red"></i>
           退出
         </el-dropdown-item>
       </el-dropdown-menu>
@@ -39,6 +39,7 @@ a {
 .logo-name {
   vertical-align: middle;
   padding-left: 10px;
+  font-size: large;
 }
 
 .el-dropdown {

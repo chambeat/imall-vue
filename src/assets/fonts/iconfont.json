@@ -6,6 +6,55 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1320048",
+      "name": "数据统计",
+      "font_class": "statistics",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "1472510",
+      "name": "列表",
+      "font_class": "list",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
+      "icon_id": "688096",
+      "name": "商品 购物袋2",
+      "font_class": "goods",
+      "unicode": "e789",
+      "unicode_decimal": 59273
+    },
+    {
+      "icon_id": "1727367",
+      "name": "28体积、空间",
+      "font_class": "authority",
+      "unicode": "e89f",
+      "unicode_decimal": 59551
+    },
+    {
+      "icon_id": "1727362",
+      "name": "25单据",
+      "font_class": "orders",
+      "unicode": "e89b",
+      "unicode_decimal": 59547
+    },
+    {
+      "icon_id": "1727589",
+      "name": "406报表",
+      "font_class": "monitor",
+      "unicode": "e902",
+      "unicode_decimal": 59650
+    },
+    {
+      "icon_id": "401225",
+      "name": "users",
+      "font_class": "users",
+      "unicode": "e8b5",
+      "unicode_decimal": 59573
+    },
+    {
       "icon_id": "141796",
       "name": "lock",
       "font_class": "pswd",

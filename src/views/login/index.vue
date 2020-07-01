@@ -79,7 +79,7 @@ export default {
                   showClose: false,
                   message: "登录成功",
                   type: "success",
-                  duration: 2000 // 显示2秒
+                  duration: 1000 // 显示1秒
                 });
               });
             } else {
@@ -87,7 +87,8 @@ export default {
               this.$message({
                 showClose: false,
                 message: "验证失败",
-                type: "warning"
+                type: "warning",
+                duration: 1000 // 显示1秒
               });
             }
           });

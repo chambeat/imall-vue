@@ -9,13 +9,12 @@ module.exports = {
         proxy: {
             // '/dev-api': {
             [process.env.VUE_APP_BASE_API]: {
-                // 动态获取目标服务器地址，代理访问 http://localhost:8001
+                // 动态获取目标服务器地址，用于代理访问
                 target: process.env.VUE_APP_SERVICE_URL,
                 // 开启代理服务器
                 changeOrigin: true,
                 // 替换指定路径
                 pathRewrite: {
-                    // ‘/dev-api/db.json’ 最终变成 http://localhost:8001/db.json，因为地址前缀 ‘/dev-api’ 被替换为空了。
                     ['^' + process.env.VUE_APP_BASE_API]: '' // 将请求地址前缀替换为空
                 }
             }
