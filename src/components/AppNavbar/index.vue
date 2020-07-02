@@ -15,7 +15,7 @@
       text-color="#fff"
       active-text-color="#409EFF"
     >
-      <el-submenu>
+      <el-submenu index="/goods/">
         <template slot="title">
           <i class="iconfont icon-goods"></i>
           <span>商品管理</span>

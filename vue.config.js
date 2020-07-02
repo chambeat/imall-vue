@@ -7,7 +7,7 @@ module.exports = {
         open: true, // 启动服务时是否自动打开浏览器
         // 解决跨域问题：配置代理
         proxy: {
-            // '/dev-api': {
+            // '/dev-api'或'/prod-api': {
             [process.env.VUE_APP_BASE_API]: {
                 // 动态获取目标服务器地址，用于代理访问
                 target: process.env.VUE_APP_SERVICE_URL,

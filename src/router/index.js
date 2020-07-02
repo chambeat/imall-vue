@@ -25,7 +25,7 @@ const routes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/goods',
+    // redirect: '/goods',
     children: [{
       path: '/goods',
       component: Goods,

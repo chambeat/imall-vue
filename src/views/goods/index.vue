@@ -5,12 +5,12 @@
     <!-- 卡片 -->
     <el-card class="box-card">
       <!-- 1. 行内表单 -->
-      <el-form :inline="true" :model="list" class="demo-form-inline">
+      <el-form :inline="true" :model="searchMap" class="demo-form-inline">
         <el-form-item>
-          <el-input v-model="list.user" placeholder="商品名称" style="width: 250px"></el-input>
+          <el-input v-model="searchMap.gName" placeholder="商品名称" style="width: 250px"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="list.region" placeholder="商品类型" style="width: 150px">
+          <el-select v-model="searchMap.gType" placeholder="商品类型" style="width: 150px">
             <el-option
               v-for="type in typeOptions"
               :key="type.idx"
@@ -74,12 +74,13 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false" size="medium">取消</el-button>
+          <el-button type="primary" @click="addData('pojoForm')" size="medium">确定</el-button>
           <!-- <el-button type="primary" @click="addData('pojoForm')">确 定</el-button> -->
-          <el-button
+          <!-- <el-button
             type="primary"
             @click="(pojo.id === null) ? addData('pojoForm') : updateData('pojoForm')"
             size="medium"
-          >确定</el-button>
+          >确定</el-button>-->
         </div>
       </el-dialog>
       <!-- 2. 表格：
@@ -93,8 +94,8 @@
         <!-- 
         type="index" 可获取索引值，且是从1开始
         -->
-        <el-table-column type="index" label="#" width="50"></el-table-column>
-        <!-- <el-table-column prop="id" label="序号" width="80" ></el-table-column> -->
+        <!-- <el-table-column type="index" label="#" width="50"></el-table-column> -->
+        <el-table-column prop="id" label="#" width="50"></el-table-column>
         <el-table-column prop="gName" label="商品名称" width="380"></el-table-column>
         <el-table-column prop="gPrice" label="定价" width="100" sortable>
           <template slot-scope="scope">
@@ -133,14 +134,12 @@
 import goodsApi from "@/api/goods";
 
 export default {
-  created() {
-    this.fetchData();
-  },
-
   data() {
     return {
       list: [],
       total: 0,
+      pageSize: 10,
+      currentPage: 1,
       pojo: {
         // id: null, // 必须定义 id 属性并初始化为 null，否则无法复用'添加'弹出框
         gName: "",
@@ -149,6 +148,8 @@ export default {
         gType: "",
         gOrigin: ""
       },
+      // 条件搜索
+      searchMap: {},
       dialogFormVisible: false,
       typeOptions: [
         { idx: 1, name: "生活用品" },
@@ -200,9 +201,13 @@ export default {
         gName: [
           { required: true, message: "商品名称不能为空", trigger: "blur" }
         ],
-        gPrice: [{ required: true, message: "定价不能为空", trigger: "blur" }],
+        gPrice: [
+          { required: true, message: "定价不能为空", trigger: "blur" }
+          // { type: "number", message: "请输入大于 0 的数值", trigger: "blur" }
+        ],
         gStock: [
           { required: true, message: "库存量不能为空", trigger: "blur" }
+          // { type: "number", message: "请输入大于 0 的数值", trigger: "blur" }
         ],
         gType: [
           { required: true, message: "商品类型不能为空", trigger: "blur" }
@@ -212,26 +217,97 @@ export default {
     };
   },
 
+  created() {
+    this.fetchData();
+  },
+
   methods: {
-    // 发送请求，获取数据
+    // 获取数据
     fetchData() {
       goodsApi.getList().then(response => {
         this.list = response.data;
       });
-      console.log("fetchData");
-      console.log(response.data);
+      // console.log("fetchData");
     },
     // 点击'添加'
     handleAdd() {
       this.dialogFormVisible = true;
+      // 重置表单
+      this.$refs["pojoForm"].resetFields();
+    },
+    // 提交数据
+    addData(formName) {
+      this.$refs[formName].validate(valid => {
+        // 通过非空校验
+        if (valid) {
+          goodsApi.add(this.pojo).then(response => {
+            const resp = response.data;
+            if (resp.flag) {
+              // 添加成功
+              this.dialogFormVisible = false;
+              this.$message({
+                message: resp.message,
+                type: "success",
+                duration: 1600
+              });
+              // 刷新列表数据
+              this.fetchData();
+            } else {
+              // 添加失败
+              this.$message({
+                message: resp.message,
+                type: "error",
+                duration: 1600
+              });
+            }
+            console.log(response.data);
+          });
+        } else {
+          return false;
+        }
+      });
     },
     // 点击'编辑'
     handleEdit(id) {
       console.log("handleEdit");
     },
-    // 点击'删除'
+    // 删除数据
     handleDelete(id) {
-      console.log("handleDelete");
+      this.$confirm("确认删除这条记录吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          // 点击确定（执行以下逻辑）
+          goodsApi.deleteById(id).then(response => {
+            const resp = response.data;
+            if (resp.flag) {
+              // 删除成功：刷新列表数据
+              this.fetchData();
+              this.$message({
+                message: resp.message,
+                type: "success",
+                duration: 1200
+              });
+            } else {
+              // 删除失败
+              this.$message({
+                message: resp.message,
+                type: "error",
+                duration: 1200
+              });
+            }
+          });
+        })
+        .catch(() => {
+          // 点击取消（此处不用逻辑处理，会自动关闭）
+        });
+      console.log("handleDelete " + id);
+    },
+    // 改变页码时
+    handleCurrentChange() {
+      console.log("handleCurrentChange");
     }
   },
 

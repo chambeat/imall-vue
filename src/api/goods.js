@@ -15,9 +15,14 @@ export default {
             method: 'post',
             data: pojo
         })
-    }
+    },
     // 更新
 
     // 删除
-
+    deleteById(id) {
+        return request({
+            url: `/goods/${id}`,
+            method: 'delete'
+        })
+    }
 }
