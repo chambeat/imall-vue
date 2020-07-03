@@ -1,11 +1,19 @@
 import request from '@/utils/request'
 
 export default {
-    // 查询所有商品
-    getList() {
+    // 查询所有商品(分页)
+    getList(currentPage) {
         return request({
-            url: '/goods',
+            url: `/goods/${currentPage}`,
             method: 'get'
+        })
+    },
+    // 条件搜索
+    search(searchMap, currentPage) {
+        return request({
+            url: `/goods/search/${currentPage}`,
+            method: 'post',
+            data: searchMap
         })
     },
     // 添加

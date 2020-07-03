@@ -4,12 +4,12 @@
 
     <!-- 卡片 -->
     <el-card class="box-card">
-      <!-- 1. 行内表单 -->
-      <el-form :inline="true" :model="searchMap" class="demo-form-inline">
-        <el-form-item>
+      <!-- 1. 条件搜索(行内表单) -->
+      <el-form ref="searchForm" :inline="true" :model="searchMap" class="demo-form-inline">
+        <el-form-item prop="gName">
           <el-input v-model="searchMap.gName" placeholder="商品名称" style="width: 250px"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="gType">
           <el-select v-model="searchMap.gType" placeholder="商品类型" style="width: 150px">
             <el-option
               v-for="type in typeOptions"
@@ -20,7 +20,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="fetchData">
+          <el-button type="primary" @click="handleSearch">
             <i class="el-icon-search"></i>
             <span>搜索</span>
           </el-button>
@@ -149,7 +149,10 @@ export default {
         gOrigin: ""
       },
       // 条件搜索
-      searchMap: {},
+      searchMap: {
+        gName: "",
+        gType: ""
+      },
       dialogFormVisible: false,
       typeOptions: [
         { idx: 1, name: "生活用品" },
@@ -224,10 +227,27 @@ export default {
   methods: {
     // 获取数据
     fetchData() {
-      goodsApi.getList().then(response => {
-        this.list = response.data;
+      goodsApi.getList(this.currentPage).then(response => {
+        const resp = response.data;
+        this.list = resp.list;
+        this.total = resp.total;
+        // this.list = resp;
+        // this.total = this.list.length; // js 中只有 length 而没有 length()
       });
-      // console.log("fetchData");
+      console.log("fetchData");
+    },
+    // 条件搜索
+    handleSearch() {
+      console.log("handleSearch");
+
+      goodsApi.search(this.searchMap, this.currentPage).then(response => {
+        const resp = response.data;
+        this.list = resp.list;
+        this.total = resp.total;
+        console.log("按条件搜索成功");
+      });
+
+      console.log(this.searchMap);
     },
     // 点击'添加'
     handleAdd() {
@@ -306,8 +326,13 @@ export default {
       console.log("handleDelete " + id);
     },
     // 改变页码时
-    handleCurrentChange() {
-      console.log("handleCurrentChange");
+    handleCurrentChange(value) {
+      this.currentPage = value;
+      /* 注意：this.$nextTick() 是一个异步事件，只有当执行完上一条语句时，它的回调函数才会被执行。*/
+      this.$nextTick(() => {
+        this.fetchData(); // 获取数据
+      });
+      console.log("handleCurrentChange " + this.currentPage);
     }
   },
 
