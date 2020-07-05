@@ -25,15 +25,19 @@
             <span>搜索</span>
           </el-button>
         </el-form-item>
+        <el-form-item>
+          <el-button @click="resetForm('searchForm')">清空</el-button>
+        </el-form-item>
         <el-form-item class="btnAdd">
-          <el-button type="primary" @click="handleAdd">
+          <el-button type="primary" circle @click="handleAdd">
             <i class="el-icon-plus"></i>
-            <span>添加</span>
+            <!-- <span>添加</span> -->
           </el-button>
         </el-form-item>
       </el-form>
       <!-- 对话框 -->
-      <el-dialog title="商品编辑" :visible.sync="dialogFormVisible" width="500px">
+      <!-- <el-dialog title="商品编辑" :visible.sync="dialogFormVisible" width="500px"> -->
+      <el-dialog :visible.sync="dialogFormVisible" width="500px">
         <el-form
           ref="pojoForm"
           :model="pojo"
@@ -74,7 +78,11 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false" size="medium">取消</el-button>
-          <el-button type="primary" @click="addData('pojoForm')" size="medium">确定</el-button>
+          <el-button
+            type="primary"
+            @click="pojo.id === null ? addData('pojoForm') : updateData('pojoForm')"
+            size="medium"
+          >确定</el-button>
           <!-- <el-button type="primary" @click="addData('pojoForm')">确 定</el-button> -->
           <!-- <el-button
             type="primary"
@@ -141,7 +149,7 @@ export default {
       pageSize: 10,
       currentPage: 1,
       pojo: {
-        // id: null, // 必须定义 id 属性并初始化为 null，否则无法复用'添加'弹出框
+        id: null, // 必须定义 id 属性并初始化为 null，否则'编辑'无法复用'添加'弹出框
         gName: "",
         gPrice: null,
         gStock: null,
@@ -158,7 +166,7 @@ export default {
         { idx: 1, name: "生活用品" },
         { idx: 2, name: "食品" },
         { idx: 3, name: "服饰" },
-        { idx: 4, name: "家用电器" },
+        { idx: 4, name: "家电" },
         { idx: 5, name: "数码影音" },
         { idx: 6, name: "艺术/文化" },
         { idx: 7, name: "运动/户外" },
@@ -225,7 +233,7 @@ export default {
   },
 
   methods: {
-    // 获取数据
+    // 获取商品列表数据
     fetchData() {
       goodsApi.getList(this.currentPage).then(response => {
         const resp = response.data;
@@ -239,21 +247,36 @@ export default {
     // 条件搜索
     handleSearch() {
       // console.log("handleSearch " + this.searchMap);
-      goodsApi.search(this.searchMap).then(response => {
+      goodsApi.search(this.searchMap, this.currentPage).then(response => {
         const resp = response.data;
-        console.log(resp);
-        this.list = resp;
-        this.total = this.list.length;
+        // console.log(resp);
+        this.list = resp.list;
+        this.total = resp.total;
         console.log("按条件搜索成功");
       });
+    },
+    // handleSearch() {
+    //   // console.log("handleSearch " + this.searchMap);
+    //   goodsApi.search(this.searchMap).then(response => {
+    //     const resp = response.data;
+    //     console.log(resp);
+    //     this.list = resp;
+    //     this.total = this.list.length;
+    //     console.log("按条件搜索成功");
+    //   });
+    // },
+    // 重置表单
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
     },
     // 点击'添加'
     handleAdd() {
       this.dialogFormVisible = true;
       // 重置表单
-      this.$refs["pojoForm"].resetFields();
+      this.resetForm("pojoForm");
+      // this.$refs["pojoForm"].resetFields();
     },
-    // 提交数据
+    // 添加
     addData(formName) {
       this.$refs[formName].validate(valid => {
         // 通过非空校验
@@ -285,9 +308,49 @@ export default {
         }
       });
     },
+    // 根据ID获取商品数据
+    getGoodsById(id) {
+      goodsApi.getById(id).then(response => {
+        const resp = response.data;
+        this.pojo = resp;
+        // console.log(resp);
+      });
+      // console.log("根据ID查询商品");
+    },
     // 点击'编辑'
     handleEdit(id) {
-      console.log("handleEdit");
+      // 获取商品数据并回显
+      this.getGoodsById(id);
+      this.dialogFormVisible = true;
+      // console.log("编辑商品");
+    },
+    // 编辑
+    updateData(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          goodsApi.update(this.pojo).then(response => {
+            const resp = response.data;
+            if (resp.flag) {
+              this.$message({
+                message: resp.message,
+                type: "success",
+                duration: 1800
+              });
+              this.fetchData(); // 刷新列表数据
+            } else {
+              this.$message({
+                message: resp.message,
+                type: "error",
+                duration: 1800
+              });
+            }
+            // console.log(resp);
+          });
+          this.dialogFormVisible = false; // 关闭窗口
+        } else {
+          return false;
+        }
+      });
     },
     // 删除数据
     handleDelete(id) {
@@ -328,7 +391,8 @@ export default {
       this.currentPage = value;
       /* 注意：this.$nextTick() 是一个异步事件，只有当执行完上一条语句时，它的回调函数才会被执行。*/
       this.$nextTick(() => {
-        this.fetchData(); // 获取数据
+        this.searchMap === null ? this.fetchData() : this.handleSearch();
+        // this.fetchData(); // 获取数据
       });
       console.log("handleCurrentChange " + this.currentPage);
     }
