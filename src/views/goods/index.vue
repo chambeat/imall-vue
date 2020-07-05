@@ -238,16 +238,14 @@ export default {
     },
     // 条件搜索
     handleSearch() {
-      console.log("handleSearch");
-
-      goodsApi.search(this.searchMap, this.currentPage).then(response => {
+      // console.log("handleSearch " + this.searchMap);
+      goodsApi.search(this.searchMap).then(response => {
         const resp = response.data;
-        this.list = resp.list;
-        this.total = resp.total;
+        console.log(resp);
+        this.list = resp;
+        this.total = this.list.length;
         console.log("按条件搜索成功");
       });
-
-      console.log(this.searchMap);
     },
     // 点击'添加'
     handleAdd() {

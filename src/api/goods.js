@@ -9,13 +9,20 @@ export default {
         })
     },
     // 条件搜索
-    search(searchMap, currentPage) {
+    search(searchMap) {
         return request({
-            url: `/goods/search/${currentPage}`,
+            url: '/goods/search',
             method: 'post',
             data: searchMap
         })
     },
+    // search(searchMap, currentPage) {
+    //     return request({
+    //         url: `/goods/search/${currentPage}`,
+    //         method: 'post',
+    //         data: searchMap
+    //     })
+    // },
     // 添加
     add(pojo) {
         return request({
