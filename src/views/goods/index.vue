@@ -257,7 +257,10 @@ export default {
     },
     // 重置表单
     resetForm(formName) {
-      this.$refs[formName].resetFields();
+      // 必须使用 $nextTick() 回调函数，否则会报 "property 'resetFields' undefined" 错误。）
+      this.$nextTick(() => {
+        this.$refs[formName].resetFields();
+      });
     },
     // 响应信息（成功/失败）
     respMsg(resp) {
@@ -272,7 +275,8 @@ export default {
       this.dialogFormVisible = true;
       // 重置表单
       this.resetForm("pojoForm");
-      // this.$refs["pojoForm"].resetFields();
+      // 注意：此处必须把 pojo.id 赋值为 null，否则永远只执行'更新(编辑)'方法。
+      this.pojo.id = null;
     },
     // 添加
     addData(formName) {
@@ -288,7 +292,8 @@ export default {
             }
             // 响应信息
             this.respMsg(resp);
-            console.log(response.data);
+            // console.log(this.pojo.id);
+            // console.log(response.data);
           });
         } else {
           return false;
@@ -318,14 +323,14 @@ export default {
           goodsApi.update(this.pojo).then(response => {
             const resp = response.data;
             if (resp.flag) {
-              // 编辑成功：刷新列表数据
+              // 编辑成功：刷新列表数据、关闭窗口
               this.fetchData();
+              this.dialogFormVisible = false;
             }
             // 响应信息
             this.respMsg(resp);
             // console.log(resp);
           });
-          this.dialogFormVisible = false; // 关闭窗口
         } else {
           return false;
         }
