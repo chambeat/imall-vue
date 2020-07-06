@@ -167,7 +167,7 @@ export default {
         { idx: 2, name: "食品" },
         { idx: 3, name: "服饰" },
         { idx: 4, name: "家电" },
-        { idx: 5, name: "数码影音" },
+        { idx: 5, name: "数码音像" },
         { idx: 6, name: "艺术/文化" },
         { idx: 7, name: "运动/户外" },
         { idx: 8, name: "教育培训" }
@@ -255,19 +255,17 @@ export default {
         console.log("按条件搜索成功");
       });
     },
-    // handleSearch() {
-    //   // console.log("handleSearch " + this.searchMap);
-    //   goodsApi.search(this.searchMap).then(response => {
-    //     const resp = response.data;
-    //     console.log(resp);
-    //     this.list = resp;
-    //     this.total = this.list.length;
-    //     console.log("按条件搜索成功");
-    //   });
-    // },
     // 重置表单
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    // 响应信息（成功/失败）
+    respMsg(resp) {
+      this.$message({
+        message: resp.message,
+        type: resp.flag ? "success" : "error",
+        duration: 1300
+      });
     },
     // 点击'添加'
     handleAdd() {
@@ -284,23 +282,12 @@ export default {
           goodsApi.add(this.pojo).then(response => {
             const resp = response.data;
             if (resp.flag) {
-              // 添加成功
+              // 添加成功：关闭窗口、刷新列表数据
               this.dialogFormVisible = false;
-              this.$message({
-                message: resp.message,
-                type: "success",
-                duration: 1600
-              });
-              // 刷新列表数据
               this.fetchData();
-            } else {
-              // 添加失败
-              this.$message({
-                message: resp.message,
-                type: "error",
-                duration: 1600
-              });
             }
+            // 响应信息
+            this.respMsg(resp);
             console.log(response.data);
           });
         } else {
@@ -331,19 +318,11 @@ export default {
           goodsApi.update(this.pojo).then(response => {
             const resp = response.data;
             if (resp.flag) {
-              this.$message({
-                message: resp.message,
-                type: "success",
-                duration: 1800
-              });
-              this.fetchData(); // 刷新列表数据
-            } else {
-              this.$message({
-                message: resp.message,
-                type: "error",
-                duration: 1800
-              });
+              // 编辑成功：刷新列表数据
+              this.fetchData();
             }
+            // 响应信息
+            this.respMsg(resp);
             // console.log(resp);
           });
           this.dialogFormVisible = false; // 关闭窗口
@@ -352,7 +331,7 @@ export default {
         }
       });
     },
-    // 删除数据
+    // 删除
     handleDelete(id) {
       this.$confirm("确认删除这条记录吗？", "提示", {
         confirmButtonText: "确定",
@@ -366,19 +345,9 @@ export default {
             if (resp.flag) {
               // 删除成功：刷新列表数据
               this.fetchData();
-              this.$message({
-                message: resp.message,
-                type: "success",
-                duration: 1200
-              });
-            } else {
-              // 删除失败
-              this.$message({
-                message: resp.message,
-                type: "error",
-                duration: 1200
-              });
             }
+            // 响应信息
+            this.respMsg(resp);
           });
         })
         .catch(() => {
