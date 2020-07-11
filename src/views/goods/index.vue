@@ -311,6 +311,8 @@ export default {
     },
     // 点击'编辑'
     handleEdit(id) {
+      // 重置表单
+      this.resetForm("pojoForm");
       // 获取商品数据并回显
       this.getGoodsById(id);
       this.dialogFormVisible = true;
