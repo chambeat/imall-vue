@@ -5,8 +5,7 @@ module.exports = {
         host: "localhost", // 主机名（手机真机则为 0.0.0.0）
         https: false, // 协议
         open: true, // 启动服务时是否自动打开浏览器
-        // 解决跨域问题：配置代理
-        /*
+        // 解决跨域问题：配置代理（注意：当前后端代码放到一起进行部署时，需要注释掉'proxy'代码块，因为跨域问题只在开发阶段存在。）
         proxy: {
             // '/dev-api'或'/prod-api': {
             [process.env.VUE_APP_BASE_API]: {
@@ -20,7 +19,6 @@ module.exports = {
                 }
             }
         }
-        */
     },
 
     lintOnSave: false, // 关闭格式检查
